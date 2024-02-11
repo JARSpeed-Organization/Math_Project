@@ -79,6 +79,24 @@ def calculate_shuffles(deck_size):
 
     return "Non défini pour ce nombre de cartes"
 
+def calculate_shuffles_to_position(deck_size, target_position):
+    binary_position = bin(target_position - 1)[2:]  # Convertir en binaire et ignorer le préfixe '0b'
+    shuffle_sequence = []
+    for bit in binary_position:
+        if bit == '1':
+            shuffle_sequence.append('Faro In')
+        else:
+            shuffle_sequence.append('Faro Out')
+    return shuffle_sequence
+
+def move_first_card_to_position():
+    global deck
+    target_position = simpledialog.askinteger("Position de la carte", "À quelle position voulez-vous déplacer la première carte ?", minvalue=1, maxvalue=len(deck))
+    if target_position:
+        shuffle_sequence = calculate_shuffles_to_position(len(deck), target_position)
+        shuffle_sequence_text = "\n".join(shuffle_sequence)
+        messagebox.showinfo("Déplacement de la carte", f"Pour déplacer la première carte à la position {target_position}, vous devez effectuer les mélanges suivants :\n{shuffle_sequence_text}")
+
 
 window = tk.Tk()
 window.title("Faro Shuffle Simulator")
@@ -96,6 +114,7 @@ ttk.Button(frame_controls, text="Calculer mélanges nécessaires",
            command=lambda: messagebox.showinfo("Mélanges nécessaires",
                                                f"Nombre de mélanges nécessaire pour revenir au deck initial avec faro out: {calculate_shuffles(deck_size)}")).pack(
     side=tk.LEFT, padx=10)
+ttk.Button(frame_controls, text="Déplacer première carte", command=move_first_card_to_position).pack(side=tk.LEFT, padx=10)
 
 frame_cards = tk.Frame(window, bg='#ADD8E6')  # Set frame background to light blue
 frame_cards.pack(expand=True, fill='both', padx=20, pady=20)
