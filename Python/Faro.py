@@ -5,12 +5,31 @@ from PIL import Image, ImageTk
 
 def faro_out_shuffle(deck):
     half = len(deck) // 2
-    return [val for pair in zip(deck[:half], deck[half:]) for val in pair]
+    shuffled_deck = [val for pair in zip(deck[:half], deck[half:]) for val in pair]
+    if len(deck) % 2 != 0:  # Ajoute la carte supplémentaire pour un nombre impair de cartes
+        shuffled_deck.append(deck[-1])
+    return shuffled_deck
 
 
 def faro_in_shuffle(deck):
     half = len(deck) // 2
-    return [val for pair in zip(deck[half:], deck[:half]) for val in pair]
+    # Pour un nombre impair de cartes, la moitié supérieure aura une carte de plus
+    second_half = deck[half:] if len(deck) % 2 == 0 else deck[half + 1:]
+    first_half = deck[:half]
+
+    # Commence par la deuxième moitié pour un mélange Faro "in"
+    shuffled_deck = []
+    for i in range(max(len(first_half), len(second_half))):
+        if i < len(second_half):  # Ajoute d'abord de la deuxième moitié
+            shuffled_deck.append(second_half[i])
+        if i < len(first_half):  # Puis de la première moitié
+            shuffled_deck.append(first_half[i])
+
+    # Pour un nombre impair, ajoute la carte du milieu au début
+    if len(deck) % 2 != 0:
+        shuffled_deck.insert(0, deck[half])
+
+    return shuffled_deck
 
 
 def load_card_images(deck_size):
