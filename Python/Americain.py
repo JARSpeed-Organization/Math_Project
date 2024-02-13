@@ -1,4 +1,4 @@
-import matplotlib.pyplot as plt
+import matplotlib as plt
 import math
 import itertools
 import random
@@ -59,7 +59,5 @@ def american_shuffle(deck, num_shuffles):
     return deck
  
 
-plot_curve(list(range(1, 11)), createTabForPlot([2,3,4,5,6,7,8,9,10], 11), "Nombre de 2-mélange", "Probabilité", "Probabilité d'obtenir un ordre Q (3,8,5,2,4,6,7,As,Q,J,K,9,10)")
+plot_curve(list(range(1, 11)), createTabForPlot([2,3,4,5,6,7,8,9,10], 11), "Nombre de 2-mélange", "Probabilité", "Probabilité d'obtenir un ordre Q (3,8,5,2,4,6,7,A,Q,J,K,9,10)")
 print(probAmeri([3,8,5,2,4,6,7,1,12,11,13,9,10],xAmericain(3)))
-
-
