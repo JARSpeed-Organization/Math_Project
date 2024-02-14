@@ -1,15 +1,16 @@
 import matplotlib.pyplot  as plt
 import math
-import itertools
-import random
 
+# Calcul du coefficient binomial
 def binomial_coefficient(n, k):
     return math.factorial(n) // (math.factorial(k) * math.factorial(n - k))
 
+# Transforme une séquence en un tableau de sous-séquences croissantes
 def transform_to_array_of_arrays(arr):
     result = []
     current_group = [arr[0]]
 
+    # Parcourt la séquence pour grouper les éléments croissants
     for i in range(1, len(arr)):
         if arr[i] < arr[i - 1]:
             result.append(current_group)
@@ -20,6 +21,7 @@ def transform_to_array_of_arrays(arr):
     result.append(current_group)
     return result
 
+# Calcule la probabilité d'obtenir un ordre spécifique après des mélanges
 def probAmeri(Q, a):
     sm = len(transform_to_array_of_arrays(Q))
     n = len(Q)
@@ -28,6 +30,7 @@ def probAmeri(Q, a):
 def xAmericain(x):
     return 2**x
 
+# Trace une courbe représentant les probabilités calculées
 def plot_curve(x_values, y_values, xlabel="", ylabel="", title=""):
     plt.plot(x_values, y_values)
     plt.xticks(x_values) 
@@ -46,7 +49,7 @@ def createTabForPlot(jeu, nbrDeTest):
 def probaAttendu(n):
     return 1/math.factorial(n)
 
-
+# Non utilisée
 def american_shuffle(deck, num_shuffles):
     for _ in range(num_shuffles):
         new_deck = []

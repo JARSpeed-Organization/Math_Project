@@ -44,58 +44,46 @@ def load_card_images(deck_size):
 # Affiche les cartes dans l'interface utilisateur
 def display_cards(deck):
     for widget in frame_cards.winfo_children():
-        widget.destroy()  # Supprime les widgets précédents pour rafraîchir l'affichage
+        widget.destroy()
     for i, card in enumerate(deck):
-        row = i // 13  # Calcule la ligne pour l'affichage en grille
-        column = i % 13  # Calcule la colonne
+        row = i // 13
+        column = i % 13
         # Crée un widget Label pour chaque carte et l'ajoute à la grille
         label = tk.Label(frame_cards, image=card_images[card - 1], bg='#ADD8E6')
         label.grid(row=row, column=column, padx=5, pady=5, sticky="nsew")
-        frame_cards.grid_columnconfigure(column, weight=1)  # Permet aux colonnes de s'ajuster à la taille de la fenêtre
+        frame_cards.grid_columnconfigure(column, weight=1)
 
 # Demande la taille du paquet à l'utilisateur et initialise le paquet et les images
 def set_deck_size():
-    global deck_size, deck, card_images  # Déclare les variables globales
+    global deck_size, deck, card_images
     deck_size = simpledialog.askinteger("Taille du deck", "Avec combien de cartes voulez-vous jouer ?", minvalue=2, maxvalue=52)
     deck = list(range(1, deck_size + 1))  # Crée un paquet de la taille spécifiée
     card_images = load_card_images(deck_size)  # Charge les images des cartes
-    display_cards(deck)  # Affiche les cartes
+    display_cards(deck)
 
 
 # Mélange le paquet selon le type spécifié et affiche le résultat
 def shuffle_and_display(shuffle_type):
     global deck
     deck = faro_in_shuffle(deck) if shuffle_type == 'in' else faro_out_shuffle(deck)
-    display_cards(deck)  # Affiche le paquet mélangé
-
+    display_cards(deck)
 
 # Fonction pour demander le nombre de cartes
 def get_deck_size():
     return simpledialog.askinteger("Taille du deck", "Avec combien de cartes voulez-vous jouer ?", minvalue=2,
                                    maxvalue=52)
-
+# Fonction pour trouver le nombre de mélanges pour revenir à l'état initial du paquet de carte
 def calculate_shuffles(deck_size):
-    # Cas spécifiques donnés dans l'article
-    specific_cases = {
-        2: 1, 4: 2, 6: 4, 8: 3, 10: 6, 12: 10, 14: 12, 16: 4, 18: 8,
-        20: 18, 22: 6, 24: 11, 26: 20, 28: 18, 30: 28, 32: 5, 34: 10,
-        36: 12, 38: 36, 40: 12, 42: 20, 44: 14, 46: 12, 48: 23, 50: 21, 52: 8
-    }
 
-    # Retourne le résultat directement si dans les cas spécifiques
-    if deck_size in specific_cases:
-        return specific_cases[deck_size]
-
-    # Calcul pour les nombres de cartes non spécifiés directement
-    if deck_size % 2 == 0:  # Si le nombre de cartes est pair
-        k = 1
-        while (2 ** k - 1) % (deck_size - 1) != 0:
-            k += 1
-        return k
+    k = 1
+    while True:
+        if (2 ** k - 1) % (deck_size - 1) == 0:
+            return k
+        k += 1
 
     return "Non défini pour ce nombre de cartes"
 
-def calculate_shuffles_to_position(deck_size, target_position):
+def calculate_shuffles_to_position(deck_size, target_position) :
     # Convertit la position cible en binaire pour déterminer la séquence de mélanges
     binary_position = bin(target_position - 1)[2:]  # Ignore le préfixe '0b'
     shuffle_sequence = []
